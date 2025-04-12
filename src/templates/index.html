@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello, {{ name }}! your is {{ id }}</h1>
+    {% if loggedIn %}
+        <h1>Hello, since you are logged in, here are all the other registered users</h1>
+        {% for r in rows %}
+            <p>{{r[0]}} | {{r[1]}}</p>
+        {% endfor %}
+    {% else %}
+        <h1>You are not logged in!</h1>
+    {% endif %}
 {% endblock %}

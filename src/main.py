@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, session, url_for, redirect
 import sqlite3
 import hashlib
 
 app = Flask(__name__)
+app.secret_key = '11111111111111'
 
 DB_PATH = './database/database.db'
 
@@ -21,7 +22,7 @@ def login():
         hashed_pwd = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
 
         cur = connection.cursor()
-        cur.executescript(f'SELECT * FROM users where username="{request.form["username"]}" and'
+        cur.execute(f'SELECT * FROM users where username="{request.form["username"]}" and'
                     f' password="{hashed_pwd}"')
         row = cur.fetchone()
 
@@ -29,7 +30,8 @@ def login():
             return render_template("login.html", msg='Invalid credentials')
 
         # login successful
-        return render_template('index.html', name=row[2], id=row[0])
+        session['username'] = request.form['username']
+        return redirect(url_for('index'))
 
     else:
         return render_template("login.html", msg='')
@@ -39,24 +41,46 @@ def register():
     if request.method == 'POST':
         connection = get_db()
 
+        cur = connection.cursor()
+
         hashed_pwd = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
 
         query = (f'insert into users(username, name, password) values '
                  f'("{request.form['username']}", "{request.form['name']}", "{hashed_pwd}")')
 
-        connection.cursor().execute(query)
-
+        cur.executescript(query)
         connection.commit()
+
+        #
+        # print(f'SELECT * FROM users where username="{request.form["username"]}"')
+        # cur.execute(f'SELECT * FROM users where username="{request.form["username"]}"')
+        # row = cur.fetchall()
+        # print(row)
+
         connection.close()
 
-
-        return render_template('login.html')
+        return render_template('register.html', msg='Success')
     else:
-        return render_template("register.html")
+        return render_template("register.html", msg='')
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if 'username' not in session:
+        return render_template('index.html', loggedIn=False)
+
+    connection = get_db()
+    cur = connection.cursor()
+
+    namelike_param = ''
+    if 'namelike' in request.args:
+        namelike_param = request.args['namelike']
+
+    print(f'SELECT username, name FROM users where username like "{namelike_param}";')
+    cur.execute(f'SELECT username, name FROM users where username like "%{namelike_param}%";')
+    rows = cur.fetchall()
+    print(rows)
+
+    return render_template("index.html", loggedIn=True, rows=rows)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
