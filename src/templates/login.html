@@ -1,5 +1,30 @@
 {% extends "base.html" %}
 
+{% block cssblock %}
+    <style>
+        .login-form{
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.75rem;
+            align-items: center;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <h1>login page</h1>
+<form class="login-form" action="{{ url_for('login') }}" method="post">
+    <h1>Login</h1>
+    <h3 style="color:red">{{msg}}</h3>
+    <label>
+        Username <br>
+        <input name='username' type="text" placeholder="Choose a username..." required>
+    </label>
+    <label>
+        Password <br>
+        <input name='password' type="password" placeholder="Choose a password..." required>
+    </label>
+
+    <button type="submit">Login</button>
+    <a href=" {{ url_for('register') }} ">Click here to make an account if you don't have one.</a>
+</form>
 {% endblock %}
