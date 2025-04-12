@@ -18,18 +18,18 @@ def login():
     if request.method == 'POST':
         connection = get_db()
 
-        cur = connection.cursor()
-        cur.execute(f'SELECT * FROM users where username="{request.form["username"]}"')
-        row = cur.fetchone()
-
-        hashed_pwd_db = row[3]
         hashed_pwd = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
 
-        if row is None or hashed_pwd != hashed_pwd_db:
+        cur = connection.cursor()
+        cur.executescript(f'SELECT * FROM users where username="{request.form["username"]}" and'
+                    f' password="{hashed_pwd}"')
+        row = cur.fetchone()
+
+        if row is None:
             return render_template("login.html", msg='Invalid credentials')
 
         # login successful
-        print('yes!')
+        return render_template('index.html', name=row[2], id=row[0])
 
     else:
         return render_template("login.html", msg='')

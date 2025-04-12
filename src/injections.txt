@@ -1,0 +1,37 @@
+# ATTACKS:
+
+" OR 1=1; --
+on login form, will cause us to login as first user
+
+
+" ; DROP TABLE secrets; --
+setup the secrets table first, this will drop the table
+
+
+
+### FIX FOR LOGIN
+ if request.method == 'POST':
+        connection = get_db()
+
+        cur = connection.cursor()
+        cur.execute(f'SELECT * FROM users where username="{request.form["username"]}"')
+        row = cur.fetchone()
+
+        hashed_pwd_db = row[3]
+        hashed_pwd = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
+
+        if row is None or hashed_pwd != hashed_pwd_db:
+            return render_template("login.html", msg='Invalid credentials')
+
+        # login successful
+        return render_template('index.html', name=row[2], id=row[0])
+
+
+### SETUP SECRETS
+CREATE TABLE secrets(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    thesecret TEXT
+);
+insert into secrets (thesecret) values ('this is a secret');
+insert into secrets (thesecret) values ('this is another secret');
+insert into secrets (thesecret) values ('this is a super secret');
