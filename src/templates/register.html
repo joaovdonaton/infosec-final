@@ -2,19 +2,34 @@
 
 {% block cssblock %}
     <style>
-        #container{
-            background-color: green;
+        .register-form{
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.75rem;
+            align-items: center;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<form action="{{ url_for('register') }}" method="post">
+<form class="register-form" action="{{ url_for('register') }}" method="post">
+    <h1>Register an account</h1>
     <label>
-        <input type="text" placeholder="Choose a username...">
+        Username <br>
+        <input name='username' type="text" placeholder="Choose a username..." required>
     </label>
     <label>
-        <input type="text" placeholder="Choose a password...">
+        Name <br>
+        <input name='name' type="text" placeholder="Enter your name" required>
+    </label>
+    <label>
+        Birth Year <br>
+        <input name='year' type="number" placeholder="Enter your birth year" required>
+    </label>
+
+    <label>
+        Password <br>
+        <input name='password' type="password" placeholder="Choose a password..." required>
     </label>
 
     <button type="submit">Register</button>
