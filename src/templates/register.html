@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block cssblock %}
+    <style>
+        #container{
+            background-color: green;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('register') }}" method="post">
+    <label>
+        <input type="text" placeholder="Choose a username...">
+    </label>
+    <label>
+        <input type="text" placeholder="Choose a password...">
+    </label>
+
+    <button type="submit">Register</button>
+</form>
+{% endblock %}
