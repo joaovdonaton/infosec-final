@@ -12,7 +12,7 @@ import base64
 app = Flask(__name__)
 app.secret_key = '11111111111111'
 
-DB_PATH = './database/database.db'
+DB_PATH = './database/donatonDB.db'
 
 # aes key stuff
 def make_key(save_path):
