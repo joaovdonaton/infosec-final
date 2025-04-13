@@ -3,8 +3,9 @@
 {% block content %}
     {% if loggedIn %}
         <h1>Hello, since you are logged in, here are all the other registered users</h1>
+        <h3>The phone number column is stored as an AES encrypted ciphertext, it is decoded here!</h3>
         {% for r in rows %}
-            <p>{{r[0]}} | {{r[1]}}</p>
+            <p>{{r[0]}} | {{r[1]}} | {{r[2]}}</p>
         {% endfor %}
     {% else %}
         <h1>You are not logged in!</h1>
