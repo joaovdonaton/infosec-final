@@ -53,7 +53,7 @@ def login():
             return render_template("login.html", msg='Invalid credentials')
 
         # login successful
-        session['username'] = request.form['username']
+        session['username'] = row[1]
         return redirect(url_for('index'))
 
     else:
@@ -123,7 +123,7 @@ def index():
             else:
                 decrypted_rows[-1].append(r[i])
 
-    return render_template("index.html", loggedIn=True, rows=decrypted_rows)
+    return render_template("index.html", loggedIn=True, rows=decrypted_rows, username=session['username'])
 
 
 

