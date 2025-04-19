@@ -45,8 +45,7 @@ def login():
         hashed_pwd = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
 
         cur = connection.cursor()
-        cur.execute(f'SELECT * FROM users where username="{request.form["username"]}" and'
-                    f' password="{hashed_pwd}"')
+        cur.execute("SELECT * FROM users where username=? and password=?", (request.form["username"], hashed_pwd))
         row = cur.fetchone()
 
         if row is None:
@@ -78,11 +77,8 @@ def register():
         enc = cipher.encryptor()
         encrypted_phone = enc.update(x_pad) + enc.finalize()
 
-        query = (f'insert into users(username, name, year, phone, password) values '
-                 f'("{request.form['username']}", "{request.form['name']}", "{request.form['year']}",'
-                 f' "{base64.b64encode(encrypted_phone).decode('utf-8')}",  "{hashed_pwd}")')
-
-        cur.executescript(query)
+        cur.execute('insert into users(username, name, year, phone, password) values (?, ?, ?, ?,  ?)',
+                          (request.form['username'], request.form['name'], request.form['year'], base64.b64encode(encrypted_phone).decode('utf-8'), hashed_pwd))
         connection.commit()
 
         connection.close()
@@ -103,8 +99,8 @@ def index():
     if 'namelike' in request.args:
         namelike_param = request.args['namelike']
 
-    #print(f'SELECT username, name, phone FROM users where username like "{namelike_param}";')
-    cur.execute(f'SELECT username, name, phone FROM users where username like "%{namelike_param}%";')
+    cur.execute('SELECT username, name, phone FROM users where username like ?;',
+                ("%"+namelike_param+"%",))
     rows = cur.fetchall()
 
     # decrypt the phones
